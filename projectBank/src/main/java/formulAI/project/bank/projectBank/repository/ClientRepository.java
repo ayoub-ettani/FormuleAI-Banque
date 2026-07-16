@@ -1,4 +1,7 @@
 package formulAI.project.bank.projectBank.repository;
 
-public interface ClientRepository {
+import formulAI.project.bank.projectBank.models.Client;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ClientRepository extends JpaRepository<Client, Long> {
 }

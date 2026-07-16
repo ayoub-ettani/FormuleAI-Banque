@@ -1,4 +1,7 @@
 package formulAI.project.bank.projectBank.repository;
 
-public interface HistoriqueDecisionRepository {
+import formulAI.project.bank.projectBank.models.HistoriqueDecision;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface HistoriqueDecisionRepository extends JpaRepository<HistoriqueDecision, Long> {
 }
