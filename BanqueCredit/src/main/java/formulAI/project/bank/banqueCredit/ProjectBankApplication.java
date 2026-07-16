@@ -1,4 +1,4 @@
-package formulAI.project.bank.projectBank;
+package formulAI.project.bank.banqueCredit;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
