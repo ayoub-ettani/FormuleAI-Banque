@@ -1,4 +1,4 @@
-package formulAI.project.bank.projectBank.models;
+package formulAI.project.bank.banqueCredit.models;
 
 import lombok.Getter;
 import lombok.Setter;

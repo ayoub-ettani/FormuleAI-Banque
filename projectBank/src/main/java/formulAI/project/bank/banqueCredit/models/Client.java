@@ -1,6 +1,6 @@
-package formulAI.project.bank.projectBank.models;
+package formulAI.project.bank.banqueCredit.models;
 
-import formulAI.project.bank.projectBank.Enumerations.SituationClient;
+import formulAI.project.bank.banqueCredit.Enumerations.SituationClient;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
