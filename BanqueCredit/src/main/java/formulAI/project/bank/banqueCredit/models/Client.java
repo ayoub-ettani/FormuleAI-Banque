@@ -53,4 +53,6 @@ public class Client {
     @Column(nullable = false)
     private Boolean deleted = false;
 
+    private LocalDateTime deletedAt;
+
 }
