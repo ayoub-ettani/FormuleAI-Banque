@@ -11,7 +11,7 @@
 	<groupId>formulAI.project.bank</groupId>
 	<artifactId>BanqueCredit</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
+	<name>banqueCredit</name>
 	<description/>
 	<url/>
 	<licenses>
