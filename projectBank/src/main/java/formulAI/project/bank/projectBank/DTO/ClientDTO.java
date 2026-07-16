@@ -1,4 +1,5 @@
 package formulAI.project.bank.projectBank.DTO;
 
-public class ClientDTO {
+public class ClientDTO
+{
 }
