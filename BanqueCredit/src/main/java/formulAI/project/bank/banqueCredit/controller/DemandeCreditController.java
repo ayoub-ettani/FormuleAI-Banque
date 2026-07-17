@@ -2,7 +2,7 @@ package formulAI.project.bank.banqueCredit.controller;
 
 import formulAI.project.bank.banqueCredit.DTO.CreateDemandeCreditRequest;
 import formulAI.project.bank.banqueCredit.DTO.DemandeCreditResponse;
-import formulAI.project.bank.banqueCredit.service.impl.DemandeCreditService;
+import formulAI.project.bank.banqueCredit.service.IDemandeCreditService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DemandeCreditController {
 
-    private final DemandeCreditService demandeCreditService;
+    private final IDemandeCreditService demandeCreditService;
 
     @GetMapping
     public ResponseEntity<List<DemandeCreditResponse>> getAll(){
