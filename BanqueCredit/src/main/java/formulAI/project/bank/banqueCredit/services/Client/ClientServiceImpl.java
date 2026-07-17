@@ -36,4 +36,12 @@ public class ClientServiceImpl implements ClientService {
 
     }
 
+    @Override
+    public void deleteClient(Long id) {
+        Client client = clientRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("Client introuvable avec l'id : " + id));
+        client.setDeleted(true);
+        clientRepository.save(client);
+    }
+
 }
