@@ -1,0 +1,23 @@
+package formulAI.project.bank.banqueCredit.services.Client;
+
+import formulAI.project.bank.banqueCredit.DTO.ClientDTO;
+import formulAI.project.bank.banqueCredit.mappers.ClientMapper;
+import formulAI.project.bank.banqueCredit.models.Client;
+import formulAI.project.bank.banqueCredit.repository.ClientRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+
+public class ClientServiceImpl implements ClientService {
+
+    private final ClientRepository clientRepository;
+    private  final ClientMapper clientMapper;
+    @Override
+    public ClientDTO createClient(ClientDTO clientDTO) {
+        Client client = clientMapper.toEntity(clientDTO);
+        Client savedClient = clientRepository.save(client);
+        return clientMapper.toDTO(savedClient);
+    }
+}
