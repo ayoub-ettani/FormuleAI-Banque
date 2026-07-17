@@ -1,6 +1,5 @@
-package formulAI.project.bank.banqueCredit.models;
+package formulAI.project.bank.banqueCredit.model;
 
-import formulAI.project.bank.banqueCredit.Enumerations.RoleUsers;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

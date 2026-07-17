@@ -1,5 +1,5 @@
 package formulAI.project.bank.banqueCredit.DTO;
-import formulAI.project.bank.banqueCredit.Enumerations.SituationClient;
+import formulAI.project.bank.banqueCredit.model.SituationClient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
