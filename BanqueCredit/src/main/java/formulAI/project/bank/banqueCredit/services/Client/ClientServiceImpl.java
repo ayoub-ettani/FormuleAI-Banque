@@ -20,4 +20,20 @@ public class ClientServiceImpl implements ClientService {
         Client savedClient = clientRepository.save(client);
         return clientMapper.toDTO(savedClient);
     }
+
+    @Override
+    public ClientDTO updateClient(Long id, ClientDTO clientDTO) {
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Client introuvable avec l'id : " + id));
+
+        client.setNom(clientDTO.getNom());
+        client.setEmail(clientDTO.getEmail());
+        client.setRevenuMensuel(clientDTO.getRevenuMensuel());
+        client.setChargesMensuelles(clientDTO.getChargesMensuelles());
+        client.setSituationProfessionnelle(clientDTO.getSituationProfessionnelle());
+        Client updatedClient = clientRepository.save(client);
+        return clientMapper.toDTO(updatedClient);
+
+    }
+
 }
