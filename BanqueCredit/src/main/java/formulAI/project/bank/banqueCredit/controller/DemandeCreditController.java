@@ -2,6 +2,7 @@ package formulAI.project.bank.banqueCredit.controller;
 
 import formulAI.project.bank.banqueCredit.DTO.CreateDemandeCreditRequest;
 import formulAI.project.bank.banqueCredit.DTO.DemandeCreditResponse;
+import formulAI.project.bank.banqueCredit.DTO.UpdateDemandeCreditRequest;
 import formulAI.project.bank.banqueCredit.service.IDemandeCreditService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,18 @@ public class DemandeCreditController {
                 demandeCreditService.createDemandeCredit(request)
         );
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<DemandeCreditResponse> update(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateDemandeCreditRequest request) {
+
+        return ResponseEntity.ok(
+                demandeCreditService.updateDemandeCredit(
+                        id,
+                        request)
+        );
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDemandeCredit(@PathVariable Long id) {

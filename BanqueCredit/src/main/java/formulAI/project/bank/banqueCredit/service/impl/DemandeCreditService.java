@@ -2,6 +2,7 @@ package formulAI.project.bank.banqueCredit.service.impl;
 
 import formulAI.project.bank.banqueCredit.DTO.CreateDemandeCreditRequest;
 import formulAI.project.bank.banqueCredit.DTO.DemandeCreditResponse;
+import formulAI.project.bank.banqueCredit.DTO.UpdateDemandeCreditRequest;
 import formulAI.project.bank.banqueCredit.exception.BusinessException;
 import formulAI.project.bank.banqueCredit.exception.ResourceNotFoundException;
 import formulAI.project.bank.banqueCredit.mapper.DemandeCreditMapper;
@@ -99,6 +100,63 @@ public class DemandeCreditService implements IDemandeCreditService {
                 .stream()
                 .map(demandeCreditMapper::toResponse)
                 .toList();
+    }
+
+    @Override
+    public DemandeCreditResponse updateDemandeCredit(
+            Long id,
+            UpdateDemandeCreditRequest request) {
+
+        DemandeCredit demandeCredit =
+                demandeCreditRepository
+                        .findByIdAndDeletedFalse(id)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Demande de crédit introuvable"));
+
+        if (demandeCredit.getStatut() != StatutDemande.BROUILLON) {
+
+            throw new BusinessException(
+                    "Seule une demande en statut BROUILLON peut être modifiée");
+        }
+
+        double mensualite =
+                CreditSimulationUtils.calculMensualite(
+                        request.getMontantDemande(),
+                        request.getDureeMois(),
+                        request.getTauxFictif());
+
+        double tauxEndettement =
+                CreditSimulationUtils.calculTauxEndettement(
+                        demandeCredit.getClient().getRevenuMensuel(),
+                        demandeCredit.getClient().getChargesMensuelles(),
+                        mensualite);
+
+        int score = calculScore(
+                demandeCredit.getClient().getRevenuMensuel(),
+                demandeCredit.getClient().getChargesMensuelles(),
+                mensualite,
+                request.getMontantDemande());
+
+        demandeCredit.setMontantDemande(
+                request.getMontantDemande());
+
+        demandeCredit.setDureeMois(
+                request.getDureeMois());
+
+        demandeCredit.setTauxFictif(
+                request.getTauxFictif());
+
+        demandeCredit.setMensualiteEstimee(
+                mensualite);
+
+        demandeCredit.setScoreSimplifie(
+                score);
+
+        DemandeCredit updatedDemande =
+                demandeCreditRepository.save(demandeCredit);
+
+        return demandeCreditMapper.toResponse(updatedDemande);
     }
 
     @Override
