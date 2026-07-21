@@ -1,7 +1,7 @@
-package formulAI.project.bank.banqueCredit.mapper;
+package formulAI.project.bank.banqueCredit.mappers;
 
 import formulAI.project.bank.banqueCredit.DTO.ClientDTO;
-import formulAI.project.bank.banqueCredit.model.Client;
+import formulAI.project.bank.banqueCredit.models.Client;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

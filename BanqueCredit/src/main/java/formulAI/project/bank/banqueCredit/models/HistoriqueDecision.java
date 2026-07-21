@@ -1,4 +1,5 @@
-package formulAI.project.bank.banqueCredit.model;
+package formulAI.project.bank.banqueCredit.models;
+import formulAI.project.bank.banqueCredit.Enumerations.StatutDemande;
 import jakarta.persistence.*;
 import lombok.*;
 
