@@ -1,4 +1,4 @@
-package formulAI.project.bank.banqueCredit.models;
+package formulAI.project.bank.banqueCredit.model;
 
 import formulAI.project.bank.banqueCredit.Enumerations.SituationClient;
 import jakarta.persistence.*;

@@ -1,7 +1,6 @@
-package formulAI.project.bank.banqueCredit.Enumerations;
+package formulAI.project.bank.banqueCredit.model;
 
 public enum StatutDemande {
-
     BROUILLON,
     SOUMISE,
     EN_ANALYSE,

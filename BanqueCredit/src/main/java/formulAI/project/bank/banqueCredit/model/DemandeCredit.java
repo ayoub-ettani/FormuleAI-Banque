@@ -1,6 +1,5 @@
-package formulAI.project.bank.banqueCredit.models;
+package formulAI.project.bank.banqueCredit.model;
 
-import formulAI.project.bank.banqueCredit.Enumerations.StatutDemande;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
