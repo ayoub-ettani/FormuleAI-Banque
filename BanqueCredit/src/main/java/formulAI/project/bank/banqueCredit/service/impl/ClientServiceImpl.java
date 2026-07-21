@@ -1,6 +1,7 @@
 package formulAI.project.bank.banqueCredit.service.impl;
 
 import formulAI.project.bank.banqueCredit.dto.ClientDTO;
+import formulAI.project.bank.banqueCredit.exception.ResourceNotFoundException;
 import formulAI.project.bank.banqueCredit.mapper.ClientMapper;
 import formulAI.project.bank.banqueCredit.model.Client;
 import formulAI.project.bank.banqueCredit.repository.ClientRepository;
@@ -20,9 +21,16 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public List<ClientDTO> getAllClients(){
-        return clientRepository.findAll()
+        return clientRepository.findByDeletedFalse()
                 .stream().map(clientMapper::toDTO)
                 .toList();
+    }
+
+    @Override
+    public ClientDTO getClientById(Long id){
+        return clientRepository.findByIdAndDeletedFalse(id)
+                .map(clientMapper::toDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Client introuvable avec l'id : " + id));
     }
 
     @Override
@@ -34,8 +42,8 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientDTO updateClient(Long id, ClientDTO clientDTO) {
-        Client client = clientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Client introuvable avec l'id : " + id));
+        Client client = clientRepository.findByIdAndDeletedFalse(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Client introuvable avec l'id : " + id));
 
         client.setNom(clientDTO.getNom());
         client.setEmail(clientDTO.getEmail());
@@ -49,8 +57,8 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void deleteClient(Long id) {
-        Client client = clientRepository.findById(id).orElseThrow(() ->
-                new RuntimeException("Client introuvable avec l'id : " + id));
+        Client client = clientRepository.findByIdAndDeletedFalse(id).orElseThrow(() ->
+                new ResourceNotFoundException("Client introuvable avec l'id : " + id));
         client.setDeleted(true);
         clientRepository.save(client);
     }

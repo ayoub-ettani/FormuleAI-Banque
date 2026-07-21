@@ -17,7 +17,7 @@ public class ProjectBankApplication {
 		SpringApplication.run(ProjectBankApplication.class, args);
 	}
 
-
+	//TODO:delete thoses lines after validation of a commun database with ouafaa --maybe flyway?
 	// Cree deux utilisateurs de test au demarrage in case la table est vide
 	@Bean
     CommandLineRunner initUsers(UserRepository userRepository, PasswordEncoder passwordEncoder) {

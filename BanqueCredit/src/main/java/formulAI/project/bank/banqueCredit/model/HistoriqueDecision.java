@@ -29,9 +29,7 @@ public class HistoriqueDecision {
     @Column(length = 1000)
     private String commentaire;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private String auteur;
 
     @Column(nullable = false)
     private LocalDateTime date;

@@ -1,4 +1,4 @@
-package formulAI.project.bank.banqueCredit.DTO;
+package formulAI.project.bank.banqueCredit.dto;
 
 import lombok.*;
 
