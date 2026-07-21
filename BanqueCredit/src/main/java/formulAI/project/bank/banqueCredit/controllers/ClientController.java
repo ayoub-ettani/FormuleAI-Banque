@@ -9,12 +9,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/clients")
 @RequiredArgsConstructor
 public class ClientController {
 
     private final ClientService clientService;
+    @GetMapping
+    public ResponseEntity<List<ClientDTO>> getAllClients(){
+        return ResponseEntity.ok(clientService.getAllClients());
+    }
 
     @PostMapping
     public ResponseEntity<ClientDTO> createClient(@Valid @RequestBody ClientDTO clientDTO) {

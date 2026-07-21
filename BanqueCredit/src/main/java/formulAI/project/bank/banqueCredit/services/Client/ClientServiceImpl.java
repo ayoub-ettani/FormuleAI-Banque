@@ -7,6 +7,8 @@ import formulAI.project.bank.banqueCredit.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 
@@ -14,6 +16,14 @@ public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
     private  final ClientMapper clientMapper;
+
+    @Override
+    public List<ClientDTO> getAllClients(){
+        return clientRepository.findAll()
+                .stream().map(clientMapper::toDTO)
+                .toList();
+    }
+
     @Override
     public ClientDTO createClient(ClientDTO clientDTO) {
         Client client = clientMapper.toEntity(clientDTO);
