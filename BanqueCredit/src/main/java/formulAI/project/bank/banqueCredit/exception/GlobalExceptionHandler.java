@@ -1,7 +1,10 @@
 package formulAI.project.bank.banqueCredit.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,56 +15,73 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    // Ressource introuvable
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<?> handleNotFound(ResourceNotFoundException ex){
-
-        Map<String,Object> response = new HashMap<>();
-
-        response.put("timestamp", LocalDateTime.now());
-        response.put("message", ex.getMessage());
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(response);
+    public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 
+    // Regle metier violee
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<?> handleBusiness(BusinessException ex){
-
-        Map<String,Object> response = new HashMap<>();
-
-        response.put("timestamp", LocalDateTime.now());
-        response.put("message", ex.getMessage());
-
-        return ResponseEntity.badRequest()
-                .body(response);
+    public ResponseEntity<Map<String, Object>> handleBusiness(BusinessException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
+    // Erreurs metier "classiques" restantes / RuntimeException non typees
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    // Erreurs de validation des DTO (@Valid)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidation(
-            MethodArgumentNotValidException ex){
+    public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
+        Map<String, String> erreursChamps = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(fieldError ->
+                erreursChamps.put(fieldError.getField(), fieldError.getDefaultMessage())
+        );
 
-        Map<String,String> errors = new HashMap<>();
-
-        ex.getBindingResult()
-                .getFieldErrors()
-                .forEach(error ->
-                        errors.put(
-                                error.getField(),
-                                error.getDefaultMessage()));
-
-        return ResponseEntity.badRequest()
-                .body(errors);
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put("message", "Erreur de validation");
+        body.put("erreurs", erreursChamps);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
+    // Identifiants invalides / acces refuse
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Map<String, Object>> handleBadCredentials(BadCredentialsException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.UNAUTHORIZED.value());
+        body.put("message", "Identifiants invalides");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+    }
+
+    // Toute autre erreur non prevue
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleOther(Exception ex){
+    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
+        log.error("Erreur non geree : ", ex);
 
-        Map<String,Object> response = new HashMap<>();
-
-        response.put("message", ex.getMessage());
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(response);
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        body.put("message", "Erreur interne : " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
 }

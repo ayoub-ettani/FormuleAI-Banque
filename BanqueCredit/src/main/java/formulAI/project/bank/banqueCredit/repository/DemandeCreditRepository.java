@@ -15,4 +15,6 @@ public interface DemandeCreditRepository extends JpaRepository<DemandeCredit, Lo
             Long clientId,
             List<StatutDemande> statuts);
 
+    List<DemandeCredit> findByStatut(StatutDemande statut);
+    long countByStatut(StatutDemande statut);
 }

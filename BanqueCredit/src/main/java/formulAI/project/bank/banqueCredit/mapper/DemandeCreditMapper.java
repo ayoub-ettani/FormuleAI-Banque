@@ -1,6 +1,6 @@
 package formulAI.project.bank.banqueCredit.mapper;
 
-import formulAI.project.bank.banqueCredit.DTO.DemandeCreditResponse;
+import formulAI.project.bank.banqueCredit.dto.DemandeCreditResponse;
 import formulAI.project.bank.banqueCredit.model.DemandeCredit;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,5 +15,4 @@ public interface DemandeCreditMapper {
     @Mapping(target = "statut", expression = "java(entity.getStatut().name())")
     DemandeCreditResponse toResponse(DemandeCredit entity);
 
-    List<DemandeCreditResponse> toResponseList(List<DemandeCredit> entities);
 }
