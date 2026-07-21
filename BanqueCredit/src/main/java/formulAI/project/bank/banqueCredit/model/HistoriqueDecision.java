@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "historique_decisions")
+@Data
 @Getter
 @Setter
 @NoArgsConstructor
@@ -43,5 +44,7 @@ public class HistoriqueDecision {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "demande_credit_id", nullable = false)
     private DemandeCredit demandeCredit;
+
+
 
 }
