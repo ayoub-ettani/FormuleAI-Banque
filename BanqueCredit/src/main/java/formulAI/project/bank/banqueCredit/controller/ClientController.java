@@ -1,6 +1,6 @@
 package formulAI.project.bank.banqueCredit.controller;
 
-import formulAI.project.bank.banqueCredit.DTO.ClientDTO;
+import formulAI.project.bank.banqueCredit.dto.ClientDTO;
 import formulAI.project.bank.banqueCredit.service.ClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

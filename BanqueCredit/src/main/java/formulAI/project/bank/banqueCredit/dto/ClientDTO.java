@@ -1,4 +1,4 @@
-package formulAI.project.bank.banqueCredit.DTO;
+package formulAI.project.bank.banqueCredit.dto;
 import formulAI.project.bank.banqueCredit.model.SituationClient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
