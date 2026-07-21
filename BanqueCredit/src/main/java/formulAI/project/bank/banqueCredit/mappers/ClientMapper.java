@@ -1,6 +1,6 @@
 package formulAI.project.bank.banqueCredit.mappers;
 
-import formulAI.project.bank.banqueCredit.dto.ClientDTO;
+import formulAI.project.bank.banqueCredit.DTO.ClientDTO;
 import formulAI.project.bank.banqueCredit.model.Client;
 import org.mapstruct.Mapper;
 
