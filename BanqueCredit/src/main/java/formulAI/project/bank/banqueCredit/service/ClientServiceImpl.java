@@ -1,8 +1,8 @@
-package formulAI.project.bank.banqueCredit.services.Client;
+package formulAI.project.bank.banqueCredit.service;
 
 import formulAI.project.bank.banqueCredit.DTO.ClientDTO;
 import formulAI.project.bank.banqueCredit.mappers.ClientMapper;
-import formulAI.project.bank.banqueCredit.models.Client;
+import formulAI.project.bank.banqueCredit.model.Client;
 import formulAI.project.bank.banqueCredit.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

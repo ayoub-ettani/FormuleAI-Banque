@@ -1,8 +1,12 @@
 package formulAI.project.bank.banqueCredit.repository;
 
-import formulAI.project.bank.banqueCredit.models.DemandeCredit;
+import formulAI.project.bank.banqueCredit.model.DemandeCredit;
+import formulAI.project.bank.banqueCredit.model.StatutDemande;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DemandeCreditRepository extends JpaRepository<DemandeCredit, Long> {
+import java.util.List;
 
+public interface DemandeCreditRepository extends JpaRepository<DemandeCredit, Long> {
+    List<DemandeCredit> findByStatut(StatutDemande statut);
+    long countByStatut(StatutDemande statut);
 }

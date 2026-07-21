@@ -1,5 +1,4 @@
-package formulAI.project.bank.banqueCredit.services.Client;
-
+package formulAI.project.bank.banqueCredit.service;
 import formulAI.project.bank.banqueCredit.DTO.ClientDTO;
 
 import java.util.List;

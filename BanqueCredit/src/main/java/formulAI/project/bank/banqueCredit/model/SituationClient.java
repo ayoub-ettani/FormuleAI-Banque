@@ -1,4 +1,4 @@
-package formulAI.project.bank.banqueCredit.Enumerations;
+package formulAI.project.bank.banqueCredit.model;
 
 public enum SituationClient {
     CDI,

@@ -1,6 +1,5 @@
-package formulAI.project.bank.banqueCredit.models;
+package formulAI.project.bank.banqueCredit.model;
 
-import formulAI.project.bank.banqueCredit.Enumerations.StatutDemande;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -47,7 +46,7 @@ public class DemandeCredit {
 
     private LocalDateTime dateDecision;
 
-    @OneToMany(mappedBy = "demandeCredit", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "demandeCredit")
     private List<HistoriqueDecision> historiques;
 
     @Column(length = 1000)
@@ -59,5 +58,7 @@ public class DemandeCredit {
 
     @Column(nullable = false)
     private Boolean deleted = false;
+
+    private LocalDateTime deletedAt;
 
 }

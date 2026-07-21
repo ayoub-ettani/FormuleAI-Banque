@@ -1,6 +1,5 @@
-package formulAI.project.bank.banqueCredit.models;
+package formulAI.project.bank.banqueCredit.model;
 
-import formulAI.project.bank.banqueCredit.Enumerations.SituationClient;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -18,7 +17,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 
 public class Client {
     @Id
@@ -53,5 +51,7 @@ public class Client {
 
     @Column(nullable = false)
     private Boolean deleted = false;
+
+    private LocalDateTime deletedAt;
 
 }
