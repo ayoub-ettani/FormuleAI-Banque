@@ -1,0 +1,47 @@
+<p>client-form works!</p>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+        <label>Nom  </label>
+        <input type="text" formControlName="nom">
+        @if (form.controls.nom.touched && form.controls.nom.invalid) {
+            <small>Le nom est obligatoire.</small>
+        }
+    </div>
+
+    <div>
+        <label>Email  </label>
+        <input type="email" formControlName="email">
+        @if (form.controls.email.touched && form.controls.email.invalid) {
+            <small>L'email est invalide.</small>
+        }
+    </div>
+    <div>
+        <label>Revenu mensuel  </label>
+        <input type="number" formControlName="revenuMensuel">
+        @if (form.controls.revenuMensuel.touched && form.controls.revenuMensuel.invalid) {
+            <small>Revenu mensuel est obligatoire.</small>
+        }
+    </div>
+    <div>
+        <label>Charges mensuelles  </label>
+        <input type="number" formControlName="chargeMensuelles">
+        @if (form.controls.chargeMensuelles.touched && form.controls.chargeMensuelles.invalid) {
+            <small>Revenu mensuel est obligatoire.</small>
+        }
+    </div>
+
+    <div>
+        <label>Situation professionnelle </label>
+        <select formControlName="situationPro">
+            <option value="">choisir une situation..</option>
+            @for (situation of situations; track situation) {
+            <option [value]="situation">{{situation}}</option>
+            }
+        </select>
+    </div>
+    <br>
+
+    <button type="submit" [disabled]="form.invalid">
+        Créer
+    </button>
+</form>

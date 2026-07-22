@@ -1,0 +1,29 @@
+<p>client-list works!</p>
+
+@if (clients.length === 0) {
+    <p>Aucun client trouvé!</p>
+} @else {
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>revenu mensuel</th>
+                <th>charges mensuelles</th>
+                <th>situation pro</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (client of clients; track client.email) {
+                <tr>
+                    <td>{{client.nom}}</td>
+                    <td>{{client.email}}</td>
+                    <td>{{client.revenuMensuel}}</td>
+                    <td>{{client.chargesMensuelles}}</td>
+                    <td>{{client.situationProfessionnelle}}</td>
+                </tr>
+            }
+        </tbody>
+ 
+    </table>
+}
