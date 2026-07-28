@@ -1,1 +1,33 @@
 <p>demande-list works!</p>
+@if (demandes.length === 0) {
+    <p>Aucune demande trouvée.</p>
+    
+} @else {
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom du client</th>
+                <th>Montant demandé</th>
+                <th>Durée (mois)</th>
+                <th>Taux fictif</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @@for (demande of demandes; track demande.id) {
+                <tr>
+                    <td>{{demande.id}}</td>
+                    <td>{{demande.clientNom}}</td>
+                    <td>{{demande.montantDemande}}</td>
+                    <td>{{demande.dureeMois}}</td>
+                    <td>{{demande.tauxFictif}} %</td>
+                    <td>
+                        <button >Afficher détails</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
