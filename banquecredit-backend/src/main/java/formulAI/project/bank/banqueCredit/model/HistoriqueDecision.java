@@ -19,7 +19,7 @@ public class HistoriqueDecision {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = true)
     private StatutDemande ancienStatut;
 
     @Enumerated(EnumType.STRING)
