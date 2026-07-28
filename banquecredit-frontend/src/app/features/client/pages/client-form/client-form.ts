@@ -5,6 +5,7 @@ import { createClientRequest } from '../../models/create-client.model';
 
 @Component({
   selector: 'app-client-form',
+  standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './client-form.html',
   styleUrl: './client-form.css',
