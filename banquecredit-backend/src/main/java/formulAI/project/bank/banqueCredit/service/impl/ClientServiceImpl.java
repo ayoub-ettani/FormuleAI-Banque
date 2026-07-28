@@ -1,6 +1,7 @@
 package formulAI.project.bank.banqueCredit.service.impl;
 
 import formulAI.project.bank.banqueCredit.dto.ClientDTO;
+import formulAI.project.bank.banqueCredit.dto.ClientResponse;
 import formulAI.project.bank.banqueCredit.exception.ResourceNotFoundException;
 import formulAI.project.bank.banqueCredit.mapper.ClientMapper;
 import formulAI.project.bank.banqueCredit.model.Client;
@@ -20,28 +21,28 @@ public class ClientServiceImpl implements ClientService {
     private  final ClientMapper clientMapper;
 
     @Override
-    public List<ClientDTO> getAllClients(){
+    public List<ClientResponse> getAllClients(){
         return clientRepository.findByDeletedFalse()
-                .stream().map(clientMapper::toDTO)
+                .stream().map(clientMapper::toResponse)
                 .toList();
     }
 
     @Override
-    public ClientDTO getClientById(Long id){
+    public ClientResponse getClientById(Long id){
         return clientRepository.findByIdAndDeletedFalse(id)
-                .map(clientMapper::toDTO)
+                .map(clientMapper::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Client introuvable avec l'id : " + id));
     }
 
     @Override
-    public ClientDTO createClient(ClientDTO clientDTO) {
+    public ClientResponse createClient(ClientDTO clientDTO) {
         Client client = clientMapper.toEntity(clientDTO);
         Client savedClient = clientRepository.save(client);
-        return clientMapper.toDTO(savedClient);
+        return clientMapper.toResponse(savedClient);
     }
 
     @Override
-    public ClientDTO updateClient(Long id, ClientDTO clientDTO) {
+    public ClientResponse updateClient(Long id, ClientDTO clientDTO) {
         Client client = clientRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Client introuvable avec l'id : " + id));
 
@@ -51,7 +52,7 @@ public class ClientServiceImpl implements ClientService {
         client.setChargesMensuelles(clientDTO.getChargesMensuelles());
         client.setSituationProfessionnelle(clientDTO.getSituationProfessionnelle());
         Client updatedClient = clientRepository.save(client);
-        return clientMapper.toDTO(updatedClient);
+        return clientMapper.toResponse(updatedClient);
 
     }
 
