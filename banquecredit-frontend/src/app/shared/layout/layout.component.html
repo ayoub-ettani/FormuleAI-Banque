@@ -1,0 +1,30 @@
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">Banque Credit</div>
+
+    <nav class="nav-links">
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/clients" routerLinkActive="active">Clients</a>
+      <a routerLink="/demandes" routerLinkActive="active">Demandes</a>
+      <a routerLink="/profil" routerLinkActive="active">Profil</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <span class="warning-banner">Environnement pedagogique - donnees fictives</span>
+
+      <div class="user-info" *ngIf="currentUser">
+        <span class="username">{{ currentUser.nomComplet || currentUser.username }}</span>
+        <span class="role-badge" [class.manager]="isManager">
+          {{ isManager ? 'Responsable credit' : 'Conseiller' }}
+        </span>
+        <button class="logout-btn" (click)="logout()">Deconnexion</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

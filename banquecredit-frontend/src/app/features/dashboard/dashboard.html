@@ -1,0 +1,36 @@
+<h1>Dashboard agence</h1>
+
+<p *ngIf="isLoading">Chargement...</p>
+<p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+<div class="cards" *ngIf="stats">
+  <div class="card orange">
+    <span class="value">{{ stats.nbSoumises }}</span>
+    <span class="label">Demandes soumises</span>
+  </div>
+
+  <div class="card orange">
+    <span class="value">{{ stats.nbEnAnalyse }}</span>
+    <span class="label">En analyse</span>
+  </div>
+
+  <div class="card green">
+    <span class="value">{{ stats.nbAcceptees }}</span>
+    <span class="label">Acceptees</span>
+  </div>
+
+  <div class="card red">
+    <span class="value">{{ stats.nbRefusees }}</span>
+    <span class="label">Refusees</span>
+  </div>
+
+  <div class="card blue">
+    <span class="value">{{ stats.montantTotalDemande | number:'1.0-0' }} DH</span>
+    <span class="label">Montant total demande</span>
+  </div>
+
+  <div class="card blue">
+    <span class="value">{{ stats.tauxMoyenEndettement | number:'1.1-1' }} %</span>
+    <span class="label">Taux moyen d'endettement</span>
+  </div>
+</div>

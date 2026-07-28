@@ -5,7 +5,8 @@ import { ClientForm } from './features/client/pages/client-form/client-form';
 
 @Component({
   selector: 'app-root',
-  imports: [ClientForm],
+  standalone: true,
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
