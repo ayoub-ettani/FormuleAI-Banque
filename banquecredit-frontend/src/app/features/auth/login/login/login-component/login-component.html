@@ -1,0 +1,21 @@
+<div class="login-container">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+    <h1>Connexion</h1>
+
+    <label>
+      Identifiant
+      <input type="text" formControlName="username" />
+    </label>
+
+    <label>
+      Mot de passe
+      <input type="password" formControlName="password" />
+    </label>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <button type="submit" [disabled]="loginForm.invalid || isLoading">
+      {{ isLoading ? 'Connexion...' : 'Se connecter' }}
+    </button>
+  </form>
+</div>

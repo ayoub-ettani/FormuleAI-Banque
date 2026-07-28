@@ -1,0 +1,22 @@
+<h1>Mon profil</h1>
+
+<p *ngIf="isLoading">Chargement...</p>
+
+<div class="profile-card" *ngIf="user && !isLoading">
+  <div class="row">
+    <span class="field-label">Nom d'utilisateur</span>
+    <span class="field-value">{{ user.username }}</span>
+  </div>
+
+  <div class="row">
+    <span class="field-label">Nom complet</span>
+    <span class="field-value">{{ user.nomComplet }}</span>
+  </div>
+
+  <div class="row">
+    <span class="field-label">Role</span>
+    <span class="field-value">
+      {{ user.role === 'ROLE_MANAGER' ? 'Responsable credit' : 'Conseiller bancaire' }}
+    </span>
+  </div>
+</div>
