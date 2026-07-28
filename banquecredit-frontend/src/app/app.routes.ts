@@ -5,19 +5,37 @@ import {DashboardComponent} from './features/dashboard/dashboard';
 import {ProfileComponent} from './features/profil/profil';
 import {LayoutComponent} from './shared/layout/layout.component';
 
+
+
+
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
 
-  {
-    path: '',
-    component: LayoutComponent,
-    canActivate: [authGuard],
-    children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'profil', component: ProfileComponent }
-    ]
-  },
+    //clients
+    {
+        path: 'clients',
+        loadComponent: () => import('./features/client/pages/client-list/client-list').then(m => m.ClientList)
+    },
+    {
+        path: 'clients/new',
+        loadComponent: () => import('./features/client/pages/client-form/client-form').then(m => m.ClientForm)
+    },
+    {
+        path: 'clients/update/:id',
+        loadComponent: () => import('./features/client/pages/client-update-data/client-update-data').then(m => m.ClientUpdateData)
+    },
 
-  { path: '**', redirectTo: 'login' }
+    //demandes
+    {
+        path: 'demandes',
+        loadComponent: () => import('./features/demandes/pages/demande-list/demande-list').then(m => m.DemandeList)
+    },
+    {
+        path: 'demandes/new',
+        loadComponent: () => import('./features/demandes/pages/demande-form/demande-form').then(m => m.DemandeForm)
+    },
+    {
+        path: 'demandes/details/:id',
+        loadComponent: () => import('./features/demandes/pages/demande-details/demande-details').then(m => m.DemandeDetails)
+    }
+
 ];
