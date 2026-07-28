@@ -1,33 +1,31 @@
 <p>demande-form works!</p>
-@if (demandes.length === 0) {
-    <p>Aucune demande trouvée.</p>
-    
-} @else {
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nom du client</th>
-                <th>Montant demandé</th>
-                <th>Durée (mois)</th>
-                <th>Taux fictif</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @@for (demande of demandes; track demande.id) {
-                <tr>
-                    <td>{{demande.id}}</td>
-                    <td>{{demande.clientNom}}</td>
-                    <td>{{demande.montantDemande}}</td>
-                    <td>{{demande.dureeMois}}</td>
-                    <td>{{demande.tauxFictif}} %</td>
-                    <td>
-                        <button >Afficher détails</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<div>
+    <form [formGroup]="form" (ngSubmit)="enregistrer()">
+        <h2>Nouvelle demande</h2>
+        <div class="form-group">
+            <label >client</label>
+            <select formControlName="clientId">
+                <option value="Sélectionner un client"></option>
+                @for (client of clients; track client.id)
+                {
+                    <option [value]="client.id">
+                        {{client.nom}}
+                    </option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Montant demandé</label>
+            <input type="number" formControlName="montantDemande">
+        </div>
+        <div class="form-group">
+            <label>Durée (Mois)</label>
+            <input type="number" formControlName="dureeMois">
+        </div>
+        <div class="form-group">
+            <label>Taux fictif %</label>
+            <input type="number" step="0.1" formControlName="tauxFictif">
+        </div>
+        <button type="submit" [disabled]="form.invalid">Enregistrer</button>
+    </form>
+</div>
