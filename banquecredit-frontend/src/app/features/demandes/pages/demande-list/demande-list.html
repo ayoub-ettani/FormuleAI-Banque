@@ -1,33 +1,42 @@
-<p>demande-list works!</p>
-@if (demandes.length === 0) {
-    <p>Aucune demande trouvée.</p>
-    
-} @else {
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nom du client</th>
-                <th>Montant demandé</th>
-                <th>Durée (mois)</th>
-                <th>Taux fictif</th>
-                <th>Action</th>
-            </tr>
-        </thead>
+<div class="header-row">
+  <h1>Demandes de credit</h1>
+  <a routerLink="/demandes/nouvelle" class="btn-primary">+ Nouvelle demande</a>
+</div>
 
-        <tbody>
-            @@for (demande of demandes; track demande.id) {
-                <tr>
-                    <td>{{demande.id}}</td>
-                    <td>{{demande.clientNom}}</td>
-                    <td>{{demande.montantDemande}}</td>
-                    <td>{{demande.dureeMois}}</td>
-                    <td>{{demande.tauxFictif}} %</td>
-                    <td>
-                        <button >Afficher détails</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<div class="filters">
+  <label>Filtrer par statut :</label>
+  <select [(ngModel)]="filtreStatut" name="filtre">
+    <option *ngFor="let s of statuts" [value]="s">{{ s }}</option>
+  </select>
+</div>
+
+<p *ngIf="isLoading">Chargement...</p>
+
+<table class="table" *ngIf="!isLoading">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Client</th>
+    <th>Montant</th>
+    <th>Duree</th>
+    <th>Statut</th>
+    <th>Score</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let d of demandesFiltrees">
+    <td>{{ d.id }}</td>
+    <td>{{ d.clientNom }}</td>
+    <td>{{ d.montantDemande | number:'1.0-0' }} DH</td>
+    <td>{{ d.dureeMois }} mois</td>
+    <td><span class="badge" [ngClass]="statutClass(d.statut)">{{ d.statut }}</span></td>
+    <td>{{ d.scoreSimplifie }}/100</td>
+    <td><a [routerLink]="['/demandes', d.id]">Voir</a></td>
+  </tr>
+  </tbody>
+</table>
+
+<p *ngIf="!isLoading && demandesFiltrees.length === 0" class="placeholder">
+  Aucune demande pour ce filtre.
+</p>
