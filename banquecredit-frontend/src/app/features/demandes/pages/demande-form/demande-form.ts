@@ -1,58 +1,69 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { Demande } from '../../models/demande.model';
-import { DemandeService } from '../../services/demande.service';
-import { Router } from '@angular/router';
-import { subscribeOn } from 'rxjs';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ClientService } from '../../../client/services/client.service';
-import { Client } from '../../../client/models/client.model';
-import { CreateDemandeRequest } from '../../models/create-demande.model';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { DemandeService } from '../../services/demande.service';
+import { SimulationResponse } from '../../models/simulation.model';
+
+import { Client } from '../../../client/models/client.model';
+import {ClientService} from '../../../client/services/client.service';
 
 @Component({
   selector: 'app-demande-form',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './demande-form.html',
-  styleUrl: './demande-form.css',
+  styleUrl: './demande-form.css'
 })
-export class DemandeForm implements OnInit{
+export class DemandeForm implements OnInit {
 
-  private fb = inject(FormBuilder);
-  private demandeService =inject(DemandeService);
-  private clientService = inject(ClientService);
-  private router = inject(Router);
-  
   clients: Client[] = [];
-  
-  form = this.fb.group({
-    clientId: [0, Validators.required],
-    montantDemande : [1001, [Validators.required, Validators.min(1001), Validators.max(100000)]
-    ],
-    dureeMois:[12, [Validators.required, Validators.min(12), Validators.max(84)] ],
-    tauxFictif: [5, [Validators.required]]
-  });
+  simulation: SimulationResponse | null = null;
+  errorMessage = '';
+  isSubmitting = false;
 
+  form;
 
-  ngOnInit(): void{
+  constructor(
+    private fb: FormBuilder,
+    private demandeService: DemandeService,
+    private clientService: ClientService,
+    private router: Router
+  ) {this.form = this.fb.nonNullable.group({
+    clientId: [null as unknown as number, Validators.required],
+    montantDemande: [null as unknown as number, [Validators.required, Validators.min(1001), Validators.max(100000)]],
+    dureeMois: [null as unknown as number, [Validators.required, Validators.min(12), Validators.max(84)]],
+    tauxFictif: [5, [Validators.required, Validators.min(0)]]
+  });}
+
+  ngOnInit(): void {
     this.clientService.getAll().subscribe({
-      next : clients => this.clients = clients
+      next: (data: Client[]) => this.clients = data
     });
   }
 
-  enregistrer(): void{
-    if (this.form.invalid)
-    {
-      this.form.markAllAsTouched();
-      return;
-    }
-    this.demandeService.createDemande(this.form.value as CreateDemandeRequest).subscribe({
-      next: () =>
-      {
-        alert("demande créée avec succes!");
-        this.router.navigate(['/demandes']);
+  simuler(): void {
+    if (this.form.invalid) return;
+    this.demandeService.simuler(this.form.getRawValue()).subscribe({
+      next: (res) => this.simulation = res,
+      error: () => this.errorMessage = 'Impossible de simuler avec ces valeurs'
+    });
+  }
+
+  onSubmit(): void {
+    if (this.form.invalid) return;
+    this.isSubmitting = true;
+    this.errorMessage = '';
+
+    this.demandeService.create(this.form.getRawValue()).subscribe({
+      next: (demande) => {
+        this.isSubmitting = false;
+        this.router.navigate(['/demandes', demande.id]);
       },
-      error: err => console.error(err)
+      error: (err) => {
+        this.isSubmitting = false;
+        this.errorMessage = err?.error?.message || 'Erreur lors de la creation';
+      }
     });
   }
-
 }

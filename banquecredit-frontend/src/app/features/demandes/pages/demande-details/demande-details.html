@@ -1,1 +1,69 @@
-<p>demande-details works!</p>
+<div *ngIf="isLoading">Chargement...</div>
+
+<div *ngIf="demande && !isLoading">
+  <h1>Demande #{{ demande.id }}</h1>
+
+  <div class="info-card">
+    <div class="row"><span>Client</span><strong>{{ demande.clientNom }}</strong></div>
+    <div class="row"><span>Montant</span><strong>{{ demande.montantDemande | number:'1.0-0' }} DH</strong></div>
+    <div class="row"><span>Duree</span><strong>{{ demande.dureeMois }} mois</strong></div>
+    <div class="row"><span>Mensualite estimee</span><strong>{{ demande.mensualiteEstimee | number:'1.2-2' }} DH</strong></div>
+    <div class="row"><span>Score</span><strong>{{ demande.scoreSimplifie }}/100</strong></div>
+    <div class="row"><span>Statut</span><strong>{{ demande.statut }}</strong></div>
+    <div class="row" *ngIf="demande.commentaireDecision">
+      <span>Commentaire decision</span><strong>{{ demande.commentaireDecision }}</strong>
+    </div>
+  </div>
+
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="actions">
+    <!-- Conseiller : soumettre depuis BROUILLON -->
+    <button *ngIf="demande.statut === 'BROUILLON' && !isManager" (click)="soumettre()">
+      Soumettre la demande
+    </button>
+
+    <!-- Manager : passer en analyse depuis SOUMISE -->
+    <button *ngIf="demande.statut === 'SOUMISE' && isManager" (click)="passerEnAnalyse()">
+      Passer en analyse
+    </button>
+
+    <!-- Annuler : possible tant que non finalise -->
+    <button
+      *ngIf="['BROUILLON','SOUMISE','EN_ANALYSE'].includes(demande.statut)"
+      class="btn-cancel"
+      (click)="annuler()">
+      Annuler la demande
+    </button>
+  </div>
+
+  <!-- Decision : reservee au manager, uniquement si EN_ANALYSE -->
+  <div class="decision-card" *ngIf="demande.statut === 'EN_ANALYSE' && isManager">
+    <h2>Prendre une decision</h2>
+    <form [formGroup]="decisionForm" (ngSubmit)="decider()">
+      <label>
+        Decision
+        <select formControlName="nouveauStatut">
+          <option value="ACCEPTEE">Accepter</option>
+          <option value="REFUSEE">Refuser</option>
+        </select>
+      </label>
+
+      <label>
+        Commentaire (obligatoire en cas de refus)
+        <textarea formControlName="commentaire" rows="3"></textarea>
+      </label>
+
+      <button type="submit">Valider la decision</button>
+    </form>
+  </div>
+
+  <h2>Historique</h2>
+  <ul class="timeline">
+    <li *ngFor="let h of historique">
+      <strong>{{ h.nouveauStatut }}</strong>
+      <span class="meta">par {{ h.auteur }} le {{ h.date | date:'dd/MM/yyyy HH:mm' }}</span>
+      <p *ngIf="h.commentaire">{{ h.commentaire }}</p>
+    </li>
+  </ul>
+</div>

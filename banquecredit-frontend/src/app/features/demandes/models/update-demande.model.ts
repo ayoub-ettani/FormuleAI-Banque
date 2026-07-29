@@ -1,5 +1,4 @@
-export interface CreateDemandeRequest {
-  clientId: number;
+export interface UpdateDemandeRequest {
   montantDemande: number;
   dureeMois: number;
   tauxFictif: number;
