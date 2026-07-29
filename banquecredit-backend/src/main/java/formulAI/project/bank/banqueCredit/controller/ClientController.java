@@ -1,6 +1,7 @@
 package formulAI.project.bank.banqueCredit.controller;
 
 import formulAI.project.bank.banqueCredit.dto.ClientDTO;
+import formulAI.project.bank.banqueCredit.dto.ClientResponse;
 import formulAI.project.bank.banqueCredit.service.ClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,26 +19,26 @@ public class ClientController {
 
     private final ClientService clientService;
     @GetMapping
-    public ResponseEntity<List<ClientDTO>> getAllClients(){
+    public ResponseEntity<List<ClientResponse>> getAllClients(){
         return ResponseEntity.ok(clientService.getAllClients());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientDTO> getClientById(@PathVariable Long id){
+    public ResponseEntity<ClientResponse> getClientById(@PathVariable Long id){
         return ResponseEntity.ok(clientService.getClientById(id));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ClientDTO> createClient(@Valid @RequestBody ClientDTO clientDTO) {
-        ClientDTO savedClient = clientService.createClient(clientDTO);
+    public ResponseEntity<ClientResponse> createClient(@Valid @RequestBody ClientDTO clientDTO) {
+        ClientResponse savedClient = clientService.createClient(clientDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedClient);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClientDTO> updateClient(@PathVariable Long id, @Valid @RequestBody ClientDTO clientDTO)
+    public ResponseEntity<ClientResponse> updateClient(@PathVariable Long id, @Valid @RequestBody ClientDTO clientDTO)
     {
-        ClientDTO updatedClient =clientService.updateClient(id, clientDTO);
+        ClientResponse updatedClient =clientService.updateClient(id, clientDTO);
         return ResponseEntity.ok(updatedClient);
     }
 

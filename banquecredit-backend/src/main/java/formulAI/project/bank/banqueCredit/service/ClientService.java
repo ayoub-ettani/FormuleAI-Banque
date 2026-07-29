@@ -2,13 +2,14 @@ package formulAI.project.bank.banqueCredit.service;
 
 
 import formulAI.project.bank.banqueCredit.dto.ClientDTO;
+import formulAI.project.bank.banqueCredit.dto.ClientResponse;
 
 import java.util.List;
 
 public interface ClientService {
-    List<ClientDTO> getAllClients();
-    ClientDTO getClientById(Long id);
-    ClientDTO createClient(ClientDTO clientDTO);
-    ClientDTO updateClient(Long id, ClientDTO clientDTO);
+    List<ClientResponse> getAllClients();
+    ClientResponse getClientById(Long id);
+    ClientResponse createClient(ClientDTO clientDTO);
+    ClientResponse updateClient(Long id, ClientDTO clientDTO);
     void deleteClient(Long id);
 }
