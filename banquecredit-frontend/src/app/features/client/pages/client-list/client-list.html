@@ -1,9 +1,9 @@
-<p>client-list works!</p>
+<div class="header-row">
+    <h1>Liste des clients</h1>
+    <button class="btn-primary" routerLink="/clients/new">+ Nouveau client</button>
+</div>
 
-@if (clients.length === 0) {
-    <p>Aucun client trouvé!</p>
-} @else {
-    <table border="1">
+    <table class="table" border="1">
         <thead>
             <tr>
                 <th>Nom</th>
@@ -11,6 +11,7 @@
                 <th>revenu mensuel</th>
                 <th>charges mensuelles</th>
                 <th>situation pro</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -21,9 +22,19 @@
                     <td>{{client.revenuMensuel}}</td>
                     <td>{{client.chargesMensuelles}}</td>
                     <td>{{client.situationProfessionnelle}}</td>
+                    <td class="actions">
+                        <button class="btn-danger" (click)="deleteClient(client.id)">Supprimer</button>
+                        <button class="btn-primary" routerLink="/clients/update/{{client.id}}">Modifier</button>
+
+                    </td>
                 </tr>
             }
+            @empty {
+                <tr>
+                    <td colspan="6" class="placeholder">Aucun client trouvé.</td>
+                </tr>
+            }
+
         </tbody>
  
     </table>
-}

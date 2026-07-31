@@ -24,15 +24,15 @@
     </div>
     <div>
         <label>Charges mensuelles  </label>
-        <input type="number" formControlName="chargeMensuelles">
-        @if (form.controls.chargeMensuelles.touched && form.controls.chargeMensuelles.invalid) {
-            <small>Revenu mensuel est obligatoire.</small>
+        <input type="number" formControlName="chargesMensuelles">
+        @if (form.controls.chargesMensuelles.touched && form.controls.chargesMensuelles.invalid) {
+            <small>Charges mensuelles est obligatoire.</small>
         }
     </div>
 
     <div>
         <label>Situation professionnelle </label>
-        <select formControlName="situationPro">
+        <select formControlName="situationProfessionnelle">
             <option value="">choisir une situation..</option>
             @for (situation of situations; track situation) {
             <option [value]="situation">{{situation}}</option>

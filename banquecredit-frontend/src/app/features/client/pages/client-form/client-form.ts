@@ -28,8 +28,8 @@ export class ClientForm {
     nom:['', Validators.required],
     email:['', [Validators.required, Validators.email]],
     revenuMensuel: [0,[Validators.required, Validators.min(0)]],
-    chargeMensuelles : [0,[Validators.required, Validators.min(0)]],
-    situationPro: ['', Validators.required],
+    chargesMensuelles : [0,[Validators.required, Validators.min(0)]],
+    situationProfessionnelle: ['', Validators.required],
   });
 
   onSubmit()
