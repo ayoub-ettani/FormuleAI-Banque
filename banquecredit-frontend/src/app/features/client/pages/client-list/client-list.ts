@@ -1,10 +1,12 @@
 import { Component, inject } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { ClientService } from '../../services/client.service';
 import { Client } from '../../models/client.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-client-list',
-  imports: [],
+  imports: [CommonModule, RouterModule],
   templateUrl: './client-list.html',
   styleUrl: './client-list.css',
 })
@@ -18,9 +20,6 @@ private readonly clientService = inject(ClientService);
   }
 
 
-
-
- 
   loadClients(): void {
     this.clientService.getAll().subscribe({
       next: (clients) => { this.clients =  clients;
@@ -29,5 +28,21 @@ private readonly clientService = inject(ClientService);
         console.error('erreur lors du chargement des données', err);
       }
     })
+
+  }
+
+  deleteClient(id: number): void {
+    if (!confirm('Voulez-vous vraiment supprimer ce client ?')) {
+      return;
+    }
+    this.clientService.deleteClient(id).subscribe({
+      next: () => {
+        alert('Client supprimé avec succès');
+        this.loadClients(); // Recharger la liste des clients après la suppression
+      },
+      error: (err) => {
+        console.error('Erreur lors de la suppression du client', err);
+      }
+    });
   }
 }

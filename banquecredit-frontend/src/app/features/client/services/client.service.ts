@@ -25,12 +25,16 @@ export class ClientService {
  
   getById(id : number): Observable<Client>
   {
-    return this.http.get<Client>('${this.api}/${id}');
+    return this.http.get<Client>(`${this.api}/${id}`);
   }
 
   updateClient(id : number, client : updateClientRequest) : Observable<Client>
   {
-    return this.http.put<Client>('${this.api}/${id}', client)
+    return this.http.put<Client>(`${this.api}/${id}`, client);
+  }
+  deleteClient(id : number) : Observable<void>
+  {
+    return this.http.delete<void>(`${this.api}/${id}`);
   }
   
 }

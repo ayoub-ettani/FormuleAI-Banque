@@ -1,5 +1,7 @@
 import { afterNextRender, Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ClientService } from '../../services/client.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { updateClientRequest } from '../../models/update-client.model';
@@ -7,7 +9,7 @@ import { setThrowInvalidWriteToSignalError } from '@angular/core/primitives/sign
 
 @Component({
   selector: 'app-client-update-data',
-  imports: [],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './client-update-data.html',
   styleUrl: './client-update-data.css',
 })
@@ -32,15 +34,25 @@ export class ClientUpdateData implements OnInit {
       nom:['', Validators.required],
     email:['', [Validators.required, Validators.email]],
     revenuMensuel: [0,[Validators.required, Validators.min(0)]],
-    chargeMensuelles : [0,[Validators.required, Validators.min(0)]],
-    situationPro: ['', Validators.required],
+    chargesMensuelles : [0,[Validators.required, Validators.min(0)]],
+    situationProfessionnelle: ['', Validators.required],
     });
 
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
     this.clientService.getById(this.id)
-      .subscribe(client => this.form.patchValue(client)); }
- 
+      .subscribe({ next:
+        (client) => this.form.patchValue(
+          {
+            nom: client.nom,
+            email: client.email,
+            revenuMensuel: client.revenuMensuel,
+            chargesMensuelles: client.chargesMensuelles,
+            situationProfessionnelle: client.situationProfessionnelle
+          }
+        )
+      });
+  } 
       onSubmit()
   {  if(this.form.invalid)
   {
