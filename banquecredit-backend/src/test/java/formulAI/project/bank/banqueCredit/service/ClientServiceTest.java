@@ -9,6 +9,7 @@ import formulAI.project.bank.banqueCredit.model.Client;
 import formulAI.project.bank.banqueCredit.model.SituationClient;
 import formulAI.project.bank.banqueCredit.repository.ClientRepository;
 import formulAI.project.bank.banqueCredit.service.impl.ClientServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,6 +30,45 @@ public class ClientServiceTest {
     private ClientMapper clientMapper;
     @InjectMocks
     private ClientServiceImpl clientService;
+
+    private Client client;
+    private Client savedClient;
+    private ClientDTO dto;
+    private ClientResponse response;
+
+    @BeforeEach
+    void setUp()
+    {
+        dto= new ClientDTO();
+        dto.setNom("Ouafae M");
+        dto.setEmail("ouafae.test@gmail.com");
+        dto.setRevenuMensuel(10000.0);
+        dto.setChargesMensuelles(8000.0);
+        dto.setSituationProfessionnelle(SituationClient.CDI);
+
+        client = new Client();
+        client.setNom("Ouafae M");
+        client.setEmail("ouafae.test@gmail.com");
+        client.setRevenuMensuel(10000.0);;
+        client.setChargesMensuelles(8000.0);;
+        client.setSituationProfessionnelle(SituationClient.CDI);
+
+        savedClient = new Client();
+        savedClient.setId(1L);
+        savedClient.setNom("Ouafae M");
+        savedClient.setEmail("ouafae.test@gmail.com");
+        savedClient.setRevenuMensuel(10000.0);
+        savedClient.setChargesMensuelles(8000.0);
+        savedClient.setSituationProfessionnelle(SituationClient.CDI);
+
+        response = new ClientResponse();
+        response.setId(1L);
+        response.setNom("Ouafae M");
+        response.setEmail("ouafae.test@gmail.com");
+        response.setRevenuMensuel(10000.0);
+        response.setChargesMensuelles(8000.0);
+        response.setSituationProfessionnelle("CDI");
+    }
 
     @Test
     void returnAllCliets()
@@ -99,36 +139,6 @@ public class ClientServiceTest {
     @Test
     void createClientTest()
     {
-        ClientDTO dto= new ClientDTO();
-        dto.setNom("Ouafae M");
-        dto.setEmail("ouafae.test@gmail.com");
-        dto.setRevenuMensuel(10000.0);
-        dto.setChargesMensuelles(8000.0);
-        dto.setSituationProfessionnelle(SituationClient.CDI);
-
-        Client client = new Client();
-        client.setNom("Ouafae M");
-        client.setEmail("ouafae.test@gmail.com");
-        client.setRevenuMensuel(10000.0);;
-        client.setChargesMensuelles(8000.0);;
-        client.setSituationProfessionnelle(SituationClient.CDI);
-
-        Client savedClient = new Client();
-        savedClient.setId(1L);
-        savedClient.setNom("Ouafae M");
-        savedClient.setEmail("ouafae.test@gmail.com");
-        savedClient.setRevenuMensuel(10000.0);
-        savedClient.setChargesMensuelles(8000.0);
-        savedClient.setSituationProfessionnelle(SituationClient.CDI);
-
-        ClientResponse response = new ClientResponse();
-        response.setId(1L);
-        response.setNom("Ouafae M");
-        response.setEmail("ouafae.test@gmail.com");
-        response.setRevenuMensuel(10000.0);
-        response.setChargesMensuelles(8000.0);
-        response.setSituationProfessionnelle("CDI");
-
         when(clientMapper.toEntity(dto)).thenReturn(client);
 
         when(clientRepo.save(client)).thenReturn(
@@ -154,36 +164,27 @@ public class ClientServiceTest {
 
     @Test
     void updateClientTest(){
-
         Long id = 1L;
 
-        ClientDTO dto= new ClientDTO();
-        dto.setNom("Ouafae M");
-        dto.setEmail("ouafae.test@gmail.com");
+        dto.setNom("Ouafae MALKI");
+        dto.setEmail("ouafae.malki@gmail.com");
         dto.setRevenuMensuel(10000.0);
-        dto.setChargesMensuelles(8000.0);
+        dto.setChargesMensuelles(8600.0);
         dto.setSituationProfessionnelle(SituationClient.CDI);
-
-        Client client = new Client();
-        client.setId(id);
-        client.setNom("Ouafae MALKI");
-        client.setEmail("ouafae.malki@gmail.com");
-
 
         Client updatedClient= new Client();
         updatedClient.setId(id);
         updatedClient.setNom("Ouafae MALKI");
         updatedClient.setEmail("ouafae.malki@gmail.com");
         updatedClient.setRevenuMensuel(10000.0);
-        updatedClient.setChargesMensuelles(8000.0);
+        updatedClient.setChargesMensuelles(8600.0);
         updatedClient.setSituationProfessionnelle(SituationClient.CDI);
 
-        ClientResponse response= new ClientResponse();
         response.setId(id);
         response.setNom("Ouafae MALKI");
         response.setEmail("ouafae.malki@gmail.com");
         response.setRevenuMensuel(10000.0);
-        response.setChargesMensuelles(8000.0);
+        response.setChargesMensuelles(8600.0);
         response.setSituationProfessionnelle("CDI");
 
         when(clientRepo.findByIdAndDeletedFalse(id)).thenReturn(Optional.of(
@@ -200,10 +201,47 @@ public class ClientServiceTest {
         assertEquals(id, result.getId());
         assertEquals("Ouafae MALKI", result.getNom());
         assertEquals("ouafae.malki@gmail.com", result.getEmail());
+        assertEquals(8600, result.getChargesMensuelles());
+
 
         verify(clientRepo).findByIdAndDeletedFalse(id);
         verify(clientRepo).save(client);
         verify(clientMapper).toResponse(updatedClient);
     }
 
+    @Test
+    void deleteClientTest()
+    {
+        Long id = 1L;
+
+        Client client = new Client();
+        client.setId(id);
+        client.setDeleted(false);
+
+        when(clientRepo.findByIdAndDeletedFalse(id))
+                .thenReturn(Optional.of(client));
+
+        clientService.deleteClient(id);
+
+        assertTrue(client.getDeleted());
+
+        verify(clientRepo).findByIdAndDeletedFalse(id);
+        verify(clientRepo).save(client);
+
+    }
+
+    @Test
+    void throwsExceptionWhenClientDeletedNotFound()
+    {
+        Long id = 1L;
+
+        when(clientRepo.findByIdAndDeletedFalse(id))
+                .thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> clientService.deleteClient(id));
+
+        verify(clientRepo).findByIdAndDeletedFalse(id);
+        verify(clientRepo, never()).save(any(Client.class));
+
+    }
 }
