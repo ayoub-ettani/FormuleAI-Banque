@@ -210,7 +210,8 @@ public class DemandeCreditServiceImpl implements DemandeCreditService {
         return historiqueDecisionRepository.findByDemandeCreditIdOrderByDateAsc(demandeId).stream()
                 .map(h -> new HistoriqueResponse(
                         h.getId(), h.getDemandeCredit().getId(),
-                        h.getAncienStatut().name(), h.getNouveauStatut().name(),
+                        h.getAncienStatut() == null ? null : h.getAncienStatut().name(),
+                        h.getNouveauStatut().name(),
                         h.getCommentaire(), h.getAuteur(), h.getDate()))
                 .toList();
     }
