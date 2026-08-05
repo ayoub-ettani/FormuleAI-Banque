@@ -1,6 +1,7 @@
 package formulAI.project.bank.banqueCredit.controller;
 
 import formulAI.project.bank.banqueCredit.dto.*;
+import formulAI.project.bank.banqueCredit.model.StatutDemande;
 import formulAI.project.bank.banqueCredit.service.DemandeCreditService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
@@ -35,6 +36,16 @@ public class DemandeCreditController {
     @GetMapping
     public ResponseEntity<List<DemandeCreditResponse>> getAll() {
         return ResponseEntity.ok(demandeCreditService.getAll());
+    }
+
+    @GetMapping("/recherche")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_MANAGER')")
+    public ResponseEntity<List<DemandeCreditResponse>> recherche(
+            @RequestParam(required = false) String clientNom,
+            @RequestParam(required = false) StatutDemande statut,
+            @RequestParam(required = false) Double montantMin,
+            @RequestParam(required = false) Double montantMax) {
+        return ResponseEntity.ok(demandeCreditService.rechercherDemandes(clientNom, statut, montantMin, montantMax));
     }
 
     @GetMapping("/{id}")

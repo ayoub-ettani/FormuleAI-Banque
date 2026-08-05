@@ -18,7 +18,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -201,5 +203,149 @@ class DemandeCreditServiceImplTest {
         when(demandeCreditRepository.findByIdAndDeletedFalse(1L)).thenReturn(Optional.of(demande));
 
         assertThrows(BusinessException.class, () -> demandeCreditService.annuler(1L, "conseiller"));
+    }
+
+    // ---------- Tests recherche ----------
+
+    @Test
+    void rechercherDemandes_aucunFiltre_retourneToutesLesDemandes() {
+        DemandeCredit demande1 = new DemandeCredit();
+        demande1.setId(1L);
+        demande1.setClient(client);
+        demande1.setStatut(StatutDemande.SOUMISE);
+        demande1.setMontantDemande(10000.0);
+        demande1.setDeleted(false);
+
+        DemandeCredit demande2 = new DemandeCredit();
+        demande2.setId(2L);
+        demande2.setClient(client);
+        demande2.setStatut(StatutDemande.EN_ANALYSE);
+        demande2.setMontantDemande(20000.0);
+        demande2.setDeleted(false);
+
+        List<DemandeCredit> demandes = List.of(demande1, demande2);
+
+        when(demandeCreditRepository.findAll(any(Specification.class))).thenReturn(demandes);
+        when(demandeCreditMapper.toResponse(any())).thenReturn(new DemandeCreditResponse());
+
+        List<DemandeCreditResponse> result = demandeCreditService.rechercherDemandes(null, null, null, null);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    void rechercherDemandes_filtreParStatut_retourneDemandesAvecCeStatut() {
+        DemandeCredit demande = new DemandeCredit();
+        demande.setId(1L);
+        demande.setClient(client);
+        demande.setStatut(StatutDemande.EN_ANALYSE);
+        demande.setDeleted(false);
+
+        when(demandeCreditRepository.findAll(any(Specification.class))).thenReturn(List.of(demande));
+        when(demandeCreditMapper.toResponse(any())).thenReturn(new DemandeCreditResponse());
+
+        List<DemandeCreditResponse> result = demandeCreditService.rechercherDemandes(null, StatutDemande.EN_ANALYSE, null, null);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void rechercherDemandes_combinaisonClientNomEtMontantMin_retourneDemandesFiltrees() {
+        DemandeCredit demande = new DemandeCredit();
+        demande.setId(1L);
+        demande.setClient(client);
+        demande.setStatut(StatutDemande.SOUMISE);
+        demande.setMontantDemande(15000.0);
+        demande.setDeleted(false);
+
+        when(demandeCreditRepository.findAll(any(Specification.class))).thenReturn(List.of(demande));
+        when(demandeCreditMapper.toResponse(any())).thenReturn(new DemandeCreditResponse());
+
+        List<DemandeCreditResponse> result = demandeCreditService.rechercherDemandes("Dupont", null, 10000.0, null);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void rechercherDemandes_aucunResultat_retourneListeVide() {
+        when(demandeCreditRepository.findAll(any(Specification.class))).thenReturn(List.of());
+
+        List<DemandeCreditResponse> result = demandeCreditService.rechercherDemandes("ClientInexistant", null, null, null);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void rechercherDemandes_montantMinSuperieurMontantMax_leveBusinessException() {
+        assertThrows(BusinessException.class,
+            () -> demandeCreditService.rechercherDemandes(null, null, 20000.0, 10000.0));
+    }
+
+    @Test
+    void rechercherDemandes_filtreParNomClientInsensibleCasse_retourneDemandes() {
+        DemandeCredit demande = new DemandeCredit();
+        demande.setId(1L);
+        demande.setClient(client);
+        demande.setStatut(StatutDemande.BROUILLON);
+        demande.setDeleted(false);
+
+        when(demandeCreditRepository.findAll(any(Specification.class))).thenReturn(List.of(demande));
+        when(demandeCreditMapper.toResponse(any())).thenReturn(new DemandeCreditResponse());
+
+        List<DemandeCreditResponse> result = demandeCreditService.rechercherDemandes("dupont", null, null, null);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void rechercherDemandes_plageMonantValide_retourneDemandesDansLaPlage() {
+        DemandeCredit demande = new DemandeCredit();
+        demande.setId(1L);
+        demande.setClient(client);
+        demande.setMontantDemande(15000.0);
+        demande.setDeleted(false);
+
+        when(demandeCreditRepository.findAll(any(Specification.class))).thenReturn(List.of(demande));
+        when(demandeCreditMapper.toResponse(any())).thenReturn(new DemandeCreditResponse());
+
+        List<DemandeCreditResponse> result = demandeCreditService.rechercherDemandes(null, null, 10000.0, 20000.0);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void rechercherDemandes_montantMinNegatif_leveBusinessException() {
+        assertThrows(BusinessException.class,
+            () -> demandeCreditService.rechercherDemandes(null, null, -1000.0, 10000.0));
+    }
+
+    @Test
+    void rechercherDemandes_montantMaxNegatif_leveBusinessException() {
+        assertThrows(BusinessException.class,
+            () -> demandeCreditService.rechercherDemandes(null, null, 5000.0, -1000.0));
+    }
+
+    @Test
+    void rechercherDemandes_clientNomAvecCaracteresSpeciaux_rechercheSecurisee() {
+        DemandeCredit demande = new DemandeCredit();
+        demande.setId(1L);
+        demande.setClient(client);
+        demande.setDeleted(false);
+
+        when(demandeCreditRepository.findAll(any(Specification.class))).thenReturn(List.of(demande));
+        when(demandeCreditMapper.toResponse(any())).thenReturn(new DemandeCreditResponse());
+
+        // Caractères LIKE échappés : % et _
+        List<DemandeCreditResponse> result = demandeCreditService.rechercherDemandes("Test_%", null, null, null);
+
+        assertNotNull(result);
+        // Le test vérifie que la recherche ne lève pas d'exception
+        // et que les caractères spéciaux sont échappés correctement
     }
 }

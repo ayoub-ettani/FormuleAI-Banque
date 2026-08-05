@@ -3,6 +3,7 @@ package formulAI.project.bank.banqueCredit.service;
 
 
 import formulAI.project.bank.banqueCredit.dto.*;
+import formulAI.project.bank.banqueCredit.model.StatutDemande;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public interface DemandeCreditService {
     DemandeCreditResponse decider(Long id, DecisionRequest request, String auteur);
     DemandeCreditResponse annuler(Long id, String auteur);
     List<HistoriqueResponse> getHistorique(Long demandeId);
+    List<DemandeCreditResponse> rechercherDemandes(String clientNom, StatutDemande statut, Double montantMin, Double montantMax);
 
 
 }

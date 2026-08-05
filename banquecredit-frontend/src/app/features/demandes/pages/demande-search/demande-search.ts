@@ -1,8 +1,5 @@
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { DemandeService } from '../../services/demande.service';
-import { DemandeCredit, StatutDemande } from '../../models/demande.model';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -11,11 +8,14 @@ import {
   ReactiveFormsModule,
   ValidationErrors
 } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, startWith } from 'rxjs';
 import { DemandeRechercheFiltres } from '../../models/demande-recherche-filtres.model';
+import { DemandeCredit, StatutDemande } from '../../models/demande.model';
+import { DemandeService } from '../../services/demande.service';
 
-type DemandeListSearchForm = FormGroup<{
+type DemandeSearchForm = FormGroup<{
   clientNom: FormControl<string>;
   statut: FormControl<StatutDemande | ''>;
   montantMin: FormControl<number | null>;
@@ -34,21 +34,16 @@ function montantRangeValidator(control: AbstractControl): ValidationErrors | nul
 }
 
 @Component({
-  selector: 'app-demande-list',
+  selector: 'app-demande-search',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
-  templateUrl: './demande-list.html',
-  styleUrl: './demande-list.css'
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  templateUrl: './demande-search.html',
+  styleUrl: './demande-search.css'
 })
-
-export class DemandeList implements OnInit {
+export class DemandeSearchComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
-
-  demandes: DemandeCredit[] = [];
-  isLoading = true;
-  errorMessage = '';
-
-  readonly form: DemandeListSearchForm;
+  private readonly fb = inject(FormBuilder);
+  private readonly demandeService = inject(DemandeService);
 
   readonly statuts: StatutDemande[] = [
     'BROUILLON',
@@ -59,10 +54,13 @@ export class DemandeList implements OnInit {
     'ANNULEE'
   ];
 
-  constructor(
-    private demandeService: DemandeService,
-    private fb: FormBuilder
-  ) {
+  readonly form: DemandeSearchForm;
+
+  demandes: DemandeCredit[] = [];
+  isLoading = false;
+  errorMessage = '';
+
+  constructor() {
     this.form = this.fb.group(
       {
         clientNom: this.fb.nonNullable.control(''),
@@ -73,6 +71,7 @@ export class DemandeList implements OnInit {
       { validators: montantRangeValidator }
     );
   }
+
 
   ngOnInit(): void {
     this.form.valueChanges
@@ -101,12 +100,17 @@ export class DemandeList implements OnInit {
 
   statutClass(statut: StatutDemande): string {
     switch (statut) {
-      case 'ACCEPTEE': return 'badge-green';
-      case 'REFUSEE': return 'badge-red';
-      case 'EN_ANALYSE': return 'badge-orange';
-      case 'SOUMISE': return 'badge-orange';
-      case 'ANNULEE': return 'badge-gray';
-      default: return 'badge-blue';
+      case 'ACCEPTEE':
+        return 'badge-green';
+      case 'REFUSEE':
+        return 'badge-red';
+      case 'EN_ANALYSE':
+      case 'SOUMISE':
+        return 'badge-orange';
+      case 'ANNULEE':
+        return 'badge-gray';
+      default:
+        return 'badge-blue';
     }
   }
 
@@ -138,3 +142,4 @@ export class DemandeList implements OnInit {
     };
   }
 }
+

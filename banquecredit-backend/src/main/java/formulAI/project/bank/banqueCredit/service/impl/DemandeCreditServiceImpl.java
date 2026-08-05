@@ -9,8 +9,10 @@ import formulAI.project.bank.banqueCredit.repository.ClientRepository;
 import formulAI.project.bank.banqueCredit.repository.DemandeCreditRepository;
 import formulAI.project.bank.banqueCredit.repository.HistoriqueDecisionRepository;
 import formulAI.project.bank.banqueCredit.service.DemandeCreditService;
+import formulAI.project.bank.banqueCredit.specification.DemandeCreditSpecifications;
 import formulAI.project.bank.banqueCredit.utils.CreditSimulationUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -65,6 +67,34 @@ public class DemandeCreditServiceImpl implements DemandeCreditService {
     @Override
     public List<DemandeCreditResponse> getAll() {
         return demandeCreditRepository.findByDeletedFalse().stream()
+                .map(demandeCreditMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public List<DemandeCreditResponse> rechercherDemandes(String clientNom, StatutDemande statut, Double montantMin, Double montantMax) {
+        // Validation : montants négatifs
+        if (montantMin != null && montantMin < 0) {
+            throw new BusinessException("Le montant minimum doit être positif ou nul");
+        }
+        if (montantMax != null && montantMax < 0) {
+            throw new BusinessException("Le montant maximum doit être positif ou nul");
+        }
+
+        // Validation : montantMin ne doit pas être supérieur à montantMax
+        if (montantMin != null && montantMax != null && montantMin > montantMax) {
+            throw new BusinessException("Le montant minimum ne peut pas être supérieur au montant maximum");
+        }
+
+        // Construction de la spécification combinée
+        Specification<DemandeCredit> spec = Specification.where(DemandeCreditSpecifications.isNotDeleted())
+                .and(DemandeCreditSpecifications.clientNotDeleted())
+                .and(DemandeCreditSpecifications.clientNomContains(clientNom))
+                .and(DemandeCreditSpecifications.hasStatut(statut))
+                .and(DemandeCreditSpecifications.montantGreaterThanOrEqual(montantMin))
+                .and(DemandeCreditSpecifications.montantLessThanOrEqual(montantMax));
+
+        return demandeCreditRepository.findAll(spec).stream()
                 .map(demandeCreditMapper::toResponse)
                 .toList();
     }

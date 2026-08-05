@@ -1,6 +1,9 @@
 <div class="header-row">
-  <h1>Demandes de credit</h1>
-  <a routerLink="/demandes/nouvelle" class="btn-primary">+ Nouvelle demande</a>
+  <div>
+    <h1>Recherche des demandes</h1>
+    <p class="subtitle">Filtrez les demandes par client, statut ou montant.</p>
+  </div>
+  <a routerLink="/demandes" class="btn-secondary">Retour a la liste</a>
 </div>
 
 <form [formGroup]="form" class="search-card">
@@ -41,31 +44,36 @@
 <p *ngIf="isLoading">Chargement...</p>
 <p *ngIf="!isLoading && errorMessage" class="error-message">{{ errorMessage }}</p>
 
-<table class="table" *ngIf="!isLoading">
+<table class="table" *ngIf="!isLoading && demandes.length > 0">
   <thead>
-  <tr>
-    <th>ID</th>
-    <th>Client</th>
-    <th>Montant</th>
-    <th>Duree</th>
-    <th>Statut</th>
-    <th>Score</th>
-    <th></th>
-  </tr>
+    <tr>
+      <th>ID</th>
+      <th>Client</th>
+      <th>Montant</th>
+      <th>Duree</th>
+      <th>Statut</th>
+      <th>Score</th>
+      <th></th>
+    </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let d of demandes">
-    <td>{{ d.id }}</td>
-    <td>{{ d.clientNom }}</td>
-    <td>{{ d.montantDemande | number:'1.0-0' }} DH</td>
-    <td>{{ d.dureeMois }} mois</td>
-    <td><span class="badge" [ngClass]="statutClass(d.statut)">{{ d.statut }}</span></td>
-    <td>{{ d.scoreSimplifie }}/100</td>
-    <td><a [routerLink]="['/demandes', d.id]">Voir</a></td>
-  </tr>
+    <tr *ngFor="let demande of demandes">
+      <td>{{ demande.id }}</td>
+      <td>{{ demande.clientNom }}</td>
+      <td>{{ demande.montantDemande | number: '1.0-0' }} DH</td>
+      <td>{{ demande.dureeMois }} mois</td>
+      <td>
+        <span class="badge" [ngClass]="statutClass(demande.statut)">
+          {{ demande.statut }}
+        </span>
+      </td>
+      <td>{{ demande.scoreSimplifie }}/100</td>
+      <td><a [routerLink]="['/demandes', demande.id]">Voir</a></td>
+    </tr>
   </tbody>
 </table>
 
 <p *ngIf="!isLoading && !errorMessage && demandes.length === 0" class="placeholder">
   Aucune demande ne correspond aux filtres saisis.
 </p>
+
